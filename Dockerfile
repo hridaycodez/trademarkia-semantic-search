@@ -1,41 +1,32 @@
-# ── Stage 1: builder ─────────────────────────────────────────────────
-FROM python:3.11-slim AS builder
+# Single stage build for simplicity and compatibility
+FROM python:3.11-slim-bullseye
 
 WORKDIR /app
 
 # Install build deps
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    build-essential gcc \
+    build-essential gcc curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt .
-RUN pip install --no-cache-dir --prefix=/install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# ── Stage 2: runtime ─────────────────────────────────────────────────
-FROM python:3.11-slim
+# Fix torch to CPU-only version
+RUN pip uninstall torch -y && \
+    pip install torch==2.2.2+cpu --index-url https://download.pytorch.org/whl/cpu
 
-WORKDIR /app
+# Install onnxruntime for chromadb compatibility
+RUN pip install onnxruntime
 
-# Copy installed packages from builder
-COPY --from=builder /install /usr/local
-
-# Copy source
 COPY . .
 
-# Create directories for persistent data
 RUN mkdir -p data models
 
-# Pre-download the embedding model so the container is self-contained
-# (skipped if running offline; the model will download on first request)
-# RUN python -c "from sentence_transformers import SentenceTransformer; SentenceTransformer('all-MiniLM-L6-v2')"
-
 ENV PYTHONUNBUFFERED=1
-ENV CHROMA_PERSIST_DIR=/app/data/chroma
+ENV VECTOR_STORE_DIR=/app/data/vecstore
 ENV MODELS_DIR=/app/models
 ENV CACHE_THRESHOLD=0.85
 
 EXPOSE 8000
 
-# The index must be built (via build_index.py) before starting.
-# Mount /app/data and /app/models as volumes if you want persistence.
 CMD ["uvicorn", "api.main:app", "--host", "0.0.0.0", "--port", "8000"]
