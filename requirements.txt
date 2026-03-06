@@ -1,0 +1,15 @@
+# Core ML / NLP
+sentence-transformers==2.7.0
+scikit-learn==1.4.2
+numpy==1.26.4
+
+# Vector store
+chromadb==0.5.3
+
+# API
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.1
+
+# Utilities
+python-dotenv==1.0.1
