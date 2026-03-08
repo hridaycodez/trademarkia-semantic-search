@@ -1,0 +1,122 @@
+Loading artifacts...
+
+======================================================================
+  BIC SCORES (cluster selection justification)
+======================================================================
+     k             BIC        Change
+    10       3016797.4             -
+    15       2992605.4      -24192.0
+    20       2976343.2      -16262.2
+    25       2964607.1      -11736.1
+    30       2957312.1       -7295.0 << SELECTED
+
+======================================================================
+  CLUSTER LABEL COMPOSITIONS (30 clusters)
+======================================================================
+  Cluster  0 |   597 docs | entropy=0.17 | comp.graphics(392), comp.windows.x(93), comp.os.ms-windows.misc(63), comp.sys.mac.hardware(19)
+  Cluster  1 |   659 docs | entropy=0.27 | talk.politics.misc(256), alt.atheism(78), talk.politics.guns(75), sci.crypt(59)
+  Cluster  2 |   622 docs | entropy=0.05 | rec.sport.baseball(600), rec.sport.hockey(20), sci.med(1), talk.politics.mideast(1)
+  Cluster  3 |   215 docs | entropy=0.04 | talk.politics.misc(116), soc.religion.christian(61), alt.atheism(21), talk.religion.misc(12)
+  Cluster  4 |   386 docs | entropy=0.20 | comp.sys.ibm.pc.hardware(142), comp.sys.mac.hardware(131), sci.electronics(30), comp.os.ms-windows.misc(26)
+  Cluster  5 |   897 docs | entropy=0.12 | soc.religion.christian(589), talk.religion.misc(195), alt.atheism(96), talk.politics.guns(11)
+  Cluster  6 |   429 docs | entropy=0.15 | alt.atheism(213), soc.religion.christian(113), talk.religion.misc(73), sci.med(21)
+  Cluster  7 |   340 docs | entropy=0.12 | talk.politics.guns(281), sci.crypt(14), talk.politics.misc(13), rec.autos(12)
+  Cluster  8 |   496 docs | entropy=0.10 | comp.windows.x(473), comp.os.ms-windows.misc(12), comp.graphics(8), sci.electronics(2)
+  Cluster  9 |   558 docs | entropy=0.16 | sci.space(516), comp.graphics(9), sci.crypt(5), talk.politics.misc(4)
+  Cluster 10 |   502 docs | entropy=0.14 | talk.politics.guns(257), talk.politics.misc(118), talk.religion.misc(53), alt.atheism(27)
+  Cluster 11 |   630 docs | entropy=0.16 | rec.autos(474), rec.motorcycles(93), misc.forsale(45), sci.space(6)
+  Cluster 12 |   250 docs | entropy=0.02 | talk.politics.mideast(239), talk.politics.misc(4), soc.religion.christian(4), alt.atheism(2)
+  Cluster 13 |   347 docs | entropy=0.06 | talk.politics.mideast(336), talk.politics.guns(4), talk.politics.misc(3), alt.atheism(3)
+  Cluster 14 |  1029 docs | entropy=0.38 | sci.electronics(211), sci.space(128), sci.med(101), rec.motorcycles(99)
+  Cluster 15 |   470 docs | entropy=0.24 | misc.forsale(206), comp.sys.mac.hardware(117), comp.sys.ibm.pc.hardware(68), sci.electronics(29)
+  Cluster 16 |   793 docs | entropy=0.32 | talk.politics.mideast(137), alt.atheism(126), talk.politics.misc(89), talk.religion.misc(67)
+  Cluster 17 |   457 docs | entropy=0.23 | comp.os.ms-windows.misc(323), comp.windows.x(57), comp.sys.ibm.pc.hardware(25), comp.graphics(18)
+  Cluster 18 |   324 docs | entropy=0.20 | sci.crypt(262), sci.electronics(26), talk.politics.guns(7), comp.sys.ibm.pc.hardware(6)
+  Cluster 19 |   650 docs | entropy=0.10 | sci.med(609), talk.politics.misc(16), rec.motorcycles(5), sci.space(4)
+  Cluster 20 |   357 docs | entropy=0.25 | comp.os.ms-windows.misc(109), comp.sys.mac.hardware(104), comp.sys.ibm.pc.hardware(70), sci.electronics(19)
+  Cluster 21 |   330 docs | entropy=0.12 | comp.sys.ibm.pc.hardware(180), comp.sys.mac.hardware(95), comp.os.ms-windows.misc(23), misc.forsale(20)
+  Cluster 22 |   534 docs | entropy=0.16 | rec.motorcycles(426), rec.autos(86), misc.forsale(8), talk.politics.guns(4)
+  Cluster 23 |   751 docs | entropy=0.04 | rec.sport.hockey(710), rec.sport.baseball(38), misc.forsale(2), sci.space(1)
+  Cluster 24 |   457 docs | entropy=0.24 | comp.sys.ibm.pc.hardware(160), comp.sys.mac.hardware(133), sci.electronics(70), misc.forsale(36)
+  Cluster 25 |   334 docs | entropy=0.15 | misc.forsale(271), sci.electronics(18), comp.sys.mac.hardware(9), rec.sport.hockey(7)
+  Cluster 26 |   292 docs | entropy=0.08 | sci.crypt(286), talk.politics.misc(3), alt.atheism(1), talk.politics.mideast(1)
+  Cluster 27 |   488 docs | entropy=0.24 | sci.electronics(290), misc.forsale(54), sci.crypt(29), rec.autos(26)
+  Cluster 28 |   341 docs | entropy=0.16 | comp.sys.ibm.pc.hardware(101), comp.graphics(83), comp.os.ms-windows.misc(59), comp.sys.mac.hardware(58)
+  Cluster 29 |   932 docs | entropy=0.35 | comp.graphics(105), comp.windows.x(100), comp.os.ms-windows.misc(76), sci.crypt(75)
+
+======================================================================
+  REPRESENTATIVE DOCUMENTS (highest membership confidence)
+======================================================================
+
+  -- Cluster 0 --
+    [comp.graphics] I was wondering if anyone has ever seen/heard of a utility that converts any type of image format (gif,tiff,pcx,bmp,jpeg,etc.) to an ascii representation. I have seen some very sophiticated art...
+    [comp.graphics] I'm also interested in such a program. But most of all I'd like to know wich program is able to convert GIF or PCX to DXF !!! When I have...
+
+  -- Cluster 1 --
+    [talk.politics.misc] :I'm not sure why you don't consider it an option. No one suggests that :such analysis should be left to "regulators." In fact, the "re-inventing :government" movement provides just such...
+    [talk.politics.misc] Steve I'm glad to see that you abandoned the preamble thing. What; did you do a word search to find Welfare somewhere else in the constitution? [my comments and paraphrases...
+
+  -- Cluster 2 --
+    [rec.sport.baseball] : I think most of the problems mainly arose from Manager Gene Mauch's : ineptitude in managing the pitching staff. Down the stretch, he : abused Jim Bunning, Chris Short,...
+    [rec.sport.baseball] > The defenition of the Underdog is a team that has no talent and comes >out of nowhere to contend. The '69 Mets and '89 Orioles are prime examples, >not...
+
+  -- Cluster 3 --
+    [soc.religion.christian] [bible verses ag./ used ag. homosexuality deleted] also check out the episcopal church -- although by no means all episcopalians are sympathetic to homosexual men and women, there certainly is...
+    [talk.politics.misc] If true, and if gays were the same as straights except for sexual preference, I would imagine that gays would have much less sex than straights because the available pool...
+
+  -- Cluster 4 --
+    [comp.sys.ibm.pc.hardware] It seems that there are a lot of questions regarding the Cyrix 386 compatible 486DLC and 486DRU2. My info comes directly from Cyrix's Fast Fax service: And also from installing...
+    [comp.sys.ibm.pc.hardware] I'm thinking of splashing out on a new motherboard for my PC. I am running Linux as my main OS, with a small DOS partition left for my flatmates' games....
+
+======================================================================
+  BOUNDARY DOCUMENTS (most semantically ambiguous)
+======================================================================
+     doc  category                        top cluster           2nd cluster         
+    2957  comp.os.ms-windows.misc         C11(0.281)            C24(0.189)
+    5348  comp.windows.x                  C4(0.269)            C8(0.258)
+    3786  comp.sys.ibm.pc.hardware        C14(0.331)            C24(0.198)
+    8070  comp.sys.mac.hardware           C0(0.355)            C27(0.247)
+   11439  comp.graphics                   C29(0.250)            C14(0.211)
+   12779  comp.windows.x                  C24(0.312)            C8(0.251)
+    8012  sci.crypt                       C7(0.348)            C14(0.208)
+    1052  comp.sys.mac.hardware           C14(0.373)            C29(0.251)
+   11767  comp.os.ms-windows.misc         C29(0.466)            C17(0.156)
+   13018  sci.electronics                 C27(0.414)            C4(0.176)
+
+======================================================================
+  ENTROPY DISTRIBUTION
+======================================================================
+  Mean entropy:   0.185
+  Median entropy: 0.017
+  Max entropy:    1.792  (max possible = 3.401)
+  Docs with entropy > 2.0: 0.0%
+
+======================================================================
+  MULTI-CLUSTER MEMBERSHIP EXAMPLES
+======================================================================
+  Documents with >20% probability mass in 2+ clusters:
+
+  [sci.electronics] Back in high school I worked as a lab assistant for a bunch of experimental...
+    C27=0.72  C4=0.26
+
+  [talk.religion.misc] If a Christian means someone who believes in the divinity of Jesus, it is safe...
+    C5=0.52  C14=0.46
+
+  [comp.graphics] Using the VMODE command, all you need to do is type VMODE VESA at the...
+    C28=0.60  C0=0.32  C17=0.08
+
+  [comp.windows.x] [This belongs in comp.windows.x.i386unix - I've redirected followups] I know for a fact that the...
+    C28=0.71  C4=0.28
+
+  [sci.crypt] You're blowing smoke. Qualcomm wants to sell to nice, lucrative overseas markets like Japan and...
+    C26=0.77  C18=0.23
+
+  [sci.electronics] WHen trying to choose a resistor with a tolerance better than 1%, you need a...
+    C27=0.79  C14=0.21
+
+  [comp.sys.mac.hardware] completed Why would you dispose a channel if you are going to play more sounds...
+    C20=0.72  C27=0.28
+
+  [comp.graphics] I am currently using POVRay on Mac and was wondering if anyone in netland knows...
+    C0=0.66  C29=0.23  C14=0.10
+
