@@ -16,70 +16,70 @@ A lightweight semantic search system with fuzzy clustering and a cluster-buckete
               (P(cluster_k | query), sums to 1)
                           │
                  ┌────────▼────────┐
-                 │  Semantic Cache │  ← cluster-bucketed, O(N/K) lookup
+                 │  Semantic Cache │  cluster-bucketed, O(N/K) lookup
                  └────────┬────────┘
              HIT ◄────────┤────────► MISS
-              │           │               │
-         return cached    │          query ChromaDB
-           result         │        (filtered by dominant cluster)
-                          │               │
-                          │          cache result
-                          │               │
-                          └───────────────┘
-                                  │
+              │                          │
+         return cached              query Numpy
+           result                  Vector Store
+                                        │
+                                   cache result
+                                        │
                            return response
 ```
 
 ## Design Decisions
 
 ### Part 1 — Preprocessing
-- **Strip headers/footers/quotes**: Raw 20NG headers contain `Newsgroup: rec.sport.hockey` — trivially cheating. All content-irrelevant metadata removed.
+- **Strip headers/footers/quotes**: Raw 20NG headers contain `Newsgroup: rec.sport.hockey` — trivially leaking the category label. All metadata removed.
 - **min_words=30**: Sub-30-word posts are noise (bounced mail, one-liners). No semantic signal.
 - **max_words=500**: sentence-transformers truncates at ~512 tokens anyway; we truncate early for consistent representation.
-- **Embedding model**: `all-MiniLM-L6-v2` — 384 dims, fast CPU inference, strong STS benchmarks. Beats TF-IDF (lexical only) without the cost/dependency of commercial APIs.
+- **Embedding model**: `all-MiniLM-L6-v2` — 384 dims, fast CPU inference, strong STS benchmarks. Beats TF-IDF (lexical only) without the cost of commercial APIs.
 
 ### Part 2 — Fuzzy Clustering
 - **GMM over fuzzy c-means**: GMM is a proper probabilistic model. `predict_proba()` gives P(cluster | doc) directly, with BIC for principled cluster count selection.
 - **PCA to 50 dims before GMM**: GMM covariance estimation is unstable in 384 dims (curse of dimensionality). PCA retains >85% variance while making EM tractable.
-- **Cluster count via BIC**: Sweep [10, 15, 20, 25, 30], pick the minimum BIC. Penalises complexity — not chosen for convenience.
+- **Cluster count via BIC**: Swept [10, 15, 20, 25, 30], picked minimum BIC. Selected 30 clusters automatically — not chosen for convenience.
 
 ### Part 3 — Semantic Cache
-- **Cluster-bucketed structure**: `{cluster_id: [CacheEntry]}`. Lookup scans only the top-2 clusters by membership probability → O(N/K) vs O(N).
-- **Threshold θ analysis**:
+- **Cluster-bucketed structure**: `{cluster_id: [CacheEntry]}`. Lookup scans only the top-2 clusters by membership probability — O(N/K) vs O(N).
+- **Threshold analysis**:
   - `θ=0.95`: Near-identical rephrasing only. Cache rarely helps.
-  - `θ=0.85` (**default**): Catches paraphrases and synonym swaps. Correct and efficient.
+  - `θ=0.85` **(default)**: Catches paraphrases and synonym swaps. Correct and efficient.
   - `θ=0.70`: Topic-similar queries hit even with different intent. Correctness degrades.
   - `θ<0.60`: Almost everything hits. Cache becomes a noise generator.
 - **No Redis/Memcached**: Built from first principles. In-process dict with threading.RLock.
 
+### Part 4 — Vector Store
+- **Numpy over ChromaDB**: At 18K documents × 384 dims, the full embedding matrix is ~26MB — fits entirely in RAM. Linear scan with numpy dot product completes in under 50ms per query, making a full ANN index unnecessary overhead. This also eliminates the onnxruntime/ChromaDB dependency, keeping setup reproducible across all environments.
+
 ## Quickstart
 
 ```bash
-# 1. Create virtual environment
-python -m venv venv
-source venv/bin/activate   # or venv\Scripts\activate on Windows
-
-# 2. Install dependencies
+# 1. Install dependencies
 pip install -r requirements.txt
 
-# 3. Build the index (embed + cluster + store) — ~5-15 min on CPU
+# Fix torch to CPU-only (required on Windows)
+pip uninstall torch -y
+pip install torch==2.2.2+cpu --index-url https://download.pytorch.org/whl/cpu
+
+# 2. Build the index (embed + cluster + store) — 10-20 min on CPU
 python scripts/build_index.py
 
-# 4. (Optional) Analyse cluster quality
+# 3. (Optional) Analyse cluster quality
 python scripts/analyze_clusters.py
 
-# 5. Start the API
+# 4. Start the API
 uvicorn api.main:app --host 0.0.0.0 --port 8000
 ```
 
-## API
+## API Endpoints
 
 ### `POST /query`
 ```json
 {
   "query": "What are the health risks of smoking?",
-  "top_k": 5,
-  "threshold_override": 0.85
+  "top_k": 5
 }
 ```
 Response:
@@ -90,8 +90,8 @@ Response:
   "matched_query": null,
   "similarity_score": 0.71,
   "result": { "top_documents": [...], "n_results": 5 },
-  "dominant_cluster": 7,
-  "cluster_memberships": [[7, 0.62], [12, 0.21], [3, 0.09], ...]
+  "dominant_cluster": 19,
+  "cluster_memberships": [[19, 0.82], [14, 0.11], ...]
 }
 ```
 
@@ -109,29 +109,40 @@ Response:
 Flushes cache and resets all stats.
 
 ### `PATCH /cache/threshold?threshold=0.9`
-Update similarity threshold at runtime (no restart needed).
+Update similarity threshold at runtime — no restart needed.
 
 ### `GET /health`
-Returns service status.
+Returns service status and cache info.
+
+## Cache Demo
+
+Query 1 (cache miss):
+```
+POST /query  →  "What are the health risks of smoking?"
+cache_hit: false
+```
+
+Query 2 — same question, different words (cache hit):
+```
+POST /query  →  "Is smoking dangerous for your health?"
+cache_hit: true
+matched_query: "What are the health risks of smoking?"
+similarity_score: 0.81
+```
 
 ## Docker
 
+A Dockerfile and docker-compose.yml are included. Build and run with:
 ```bash
-# Build index first (needs to run outside Docker for data persistence)
-python scripts/build_index.py
-
-# Then build and run
 docker compose up --build
 ```
-
-The container mounts `./data` and `./models` as volumes for persistence.
 
 ## Environment Variables
 
 | Variable | Default | Description |
 |---|---|---|
 | `CACHE_THRESHOLD` | `0.85` | Cosine similarity threshold for cache hit |
-| `CHROMA_PERSIST_DIR` | `data/chroma` | ChromaDB persistence directory |
+| `VECTOR_STORE_DIR` | `data/vecstore` | Numpy vector store directory |
 | `MODELS_DIR` | `models` | Directory for GMM/PCA/scaler artifacts |
 
 ## Project Structure
@@ -141,16 +152,15 @@ newsgroups_search/
 ├── src/
 │   ├── preprocess.py      # corpus loading and cleaning
 │   ├── embedder.py        # sentence-transformers wrapper
-│   ├── vector_store.py    # ChromaDB client
+│   ├── vector_store.py    # numpy vector store
 │   ├── clustering.py      # GMM fuzzy clustering
 │   └── cache.py           # semantic cache (built from scratch)
 ├── api/
 │   └── main.py            # FastAPI application
 ├── scripts/
 │   ├── build_index.py     # one-time index builder
-│   └── analyze_clusters.py  # cluster quality analysis
-├── data/                  # embeddings + ChromaDB (gitignored)
-├── models/                # GMM + PCA artifacts (gitignored)
+│   └── analyze_clusters.py
+├── cluster_analysis.txt   # actual cluster analysis output
 ├── requirements.txt
 ├── Dockerfile
 └── docker-compose.yml
